@@ -98,6 +98,7 @@
 			if (this.times > LOOP_CHECK_MAX_CALLS) {
 				console.error(ERROR_INFINITE_LOOP);
 				this.isChecked = true;
+				throw new Error('LOOP!!!');
 			}
 		},
 	};
@@ -243,6 +244,11 @@
 			}
 
 			dispatch('infinite', stateChanger);
+
+			if (loopTracker.isChecked) {
+				console.error('stop loading!')
+				stateChanger.complete();
+			}
 
 			if (isContinuousCall && !forceUseInfiniteWrapper && !loopTracker.isChecked) {
 				// check this component whether be in an infinite loop if it is not checked
