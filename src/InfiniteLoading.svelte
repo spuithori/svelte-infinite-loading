@@ -2,7 +2,7 @@
 
 	const THROTTLE_LIMIT = 50;
 	const LOOP_CHECK_TIMEOUT = 1000;
-	const LOOP_CHECK_MAX_CALLS = 10;
+	const LOOP_CHECK_MAX_CALLS = 5;
 
 	const ERROR_INFINITE_LOOP = [
 		`executed the callback function more than ${LOOP_CHECK_MAX_CALLS} times for a short time, it looks like searched a wrong scroll wrapper that doest not has fixed height or maximum height, please check it. If you want to force to set a element as scroll wrapper rather than automatic searching, you can do this:`,
