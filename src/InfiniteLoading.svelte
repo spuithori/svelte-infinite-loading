@@ -96,9 +96,10 @@
 
 			// throw warning if the times of continuous calls large than the maximum times
 			if (this.times > LOOP_CHECK_MAX_CALLS) {
-				console.error(ERROR_INFINITE_LOOP);
+				// console.error(ERROR_INFINITE_LOOP);
 				this.isChecked = true;
-				throw new Error('LOOP!!!');
+				stateChanger.complete();
+				throw new Error('Loop limit exceeded.');
 			}
 		},
 	};
@@ -244,11 +245,6 @@
 			}
 
 			dispatch('infinite', stateChanger);
-
-			if (loopTracker.isChecked) {
-				console.error('stop loading!')
-				stateChanger.complete();
-			}
 
 			if (isContinuousCall && !forceUseInfiniteWrapper && !loopTracker.isChecked) {
 				// check this component whether be in an infinite loop if it is not checked
