@@ -98,7 +98,6 @@
 			if (this.times > LOOP_CHECK_MAX_CALLS) {
 				// console.error(ERROR_INFINITE_LOOP);
 				this.isChecked = true;
-				stateChanger.complete();
 				throw new Error('Loop limit exceeded.');
 			}
 		},
@@ -234,24 +233,28 @@
 
 	// Attempt to trigger load
 	async function attemptLoad(isContinuousCall) {
-		if (status !== STATUS.COMPLETE && isVisible(thisElement) && getCurrentDistance() <= distance) {
-			status = STATUS.LOADING;
+		try {
+			if (status !== STATUS.COMPLETE && isVisible(thisElement) && getCurrentDistance() <= distance) {
+				status = STATUS.LOADING;
 
-			if (direction === 'top') {
-				// wait for spinner display
-				await tick();
+				if (direction === 'top') {
+					// wait for spinner display
+					await tick();
 
-				scrollBarStorage.save(scrollParent);
+					scrollBarStorage.save(scrollParent);
+				}
+
+				dispatch('infinite', stateChanger);
+
+				if (isContinuousCall && !forceUseInfiniteWrapper && !loopTracker.isChecked) {
+					// check this component whether be in an infinite loop if it is not checked
+					loopTracker.track();
+				}
+			} else if (status === STATUS.LOADING) {
+				status = STATUS.READY;
 			}
-
-			dispatch('infinite', stateChanger);
-
-			if (isContinuousCall && !forceUseInfiniteWrapper && !loopTracker.isChecked) {
-				// check this component whether be in an infinite loop if it is not checked
-				loopTracker.track();
-			}
-		} else if (status === STATUS.LOADING) {
-			status = STATUS.READY;
+		} catch (e) {
+			stateChanger.complete();
 		}
 	}
 
