@@ -1,6 +1,6 @@
 <script context="module">
 
-	const THROTTLE_LIMIT = 50;
+	const THROTTLE_LIMIT = 100;
 	const LOOP_CHECK_TIMEOUT = 1000;
 	const LOOP_CHECK_MAX_CALLS = 5;
 
@@ -97,7 +97,7 @@
 			// throw warning if the times of continuous calls large than the maximum times
 			if (this.times > LOOP_CHECK_MAX_CALLS) {
 				// console.error(ERROR_INFINITE_LOOP);
-				this.isChecked = true;
+				// this.isChecked = true;
 				throw new Error('Loop limit exceeded.');
 			}
 		},
@@ -254,7 +254,8 @@
 				status = STATUS.READY;
 			}
 		} catch (e) {
-			stateChanger.complete();
+			console.error('Loading stopped.');
+			stateChanger.error();
 		}
 	}
 
